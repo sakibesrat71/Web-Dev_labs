@@ -39,7 +39,7 @@ const SearchPage = () => {
                 });
         } else if (searchType === "genre") {
             axios
-                .get(`http://localhost:7000/genre/${search}/`)
+                .get(`http://localhost:7000/search/genre/${search}/`)
                 .then((res) => {
                     setSearchResults(res.data);
                     console.log(res.data);

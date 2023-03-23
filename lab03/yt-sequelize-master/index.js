@@ -14,6 +14,7 @@ const sequelize = new Sequelize("test", "root", "password", {
   host: "localhost"
 });
 
+// creating book table
 const book_table = sequelize.define(
   "book_table",
   {
@@ -26,6 +27,19 @@ const book_table = sequelize.define(
 
 book_table.sync();
 
+// creating user table
+const user_table = sequelize.define(
+  "user_table",
+  {
+    name: Sequelize.STRING,
+    email: Sequelize.STRING,
+    password: Sequelize.STRING,
+  },
+  { tableName: "user_table" }
+);
+
+user_table.sync();
+
 sequelize
   .authenticate()
   .then(() => {
@@ -33,6 +47,7 @@ sequelize
   })
   .catch((err) => console.log(err, "this has a error"));
 
+  // post route for CREATING a book
 app.post("/", async (req, res) => {
   const name = req.body.name;
   const author = req.body.author;
@@ -53,6 +68,7 @@ app.post("/", async (req, res) => {
   // res.send("data posted ");
 });
 
+// get route for GETTING all books
 app.get("/", async (req, res) => {
   const alldata = await book_table.findAll();
   res.json(alldata);
@@ -82,7 +98,7 @@ app.get("/page/:page", async (req, res) => {
 });
 
 
-
+// put route for UPDATING a book
 app.put("/:id", (req, res) => {
   
   book_table.update(
@@ -100,6 +116,7 @@ app.put("/:id", (req, res) => {
   res.send("data updated");
 });
 
+// delete route for DELETING a book
 app.delete("/:id", (req, res) => {
   book_table.destroy({
     where: {
@@ -134,32 +151,70 @@ app.get("/search/:search", async (req, res) => {
 });
 
 // implement search by partial keywords and search by type
-app.get("/search/:search/:type", async (req, res) => {
-  const search = req.params.search;
-  const type = req.params.type;
-  const data = await book_table.findAll({
-    where: {
-      name: {
-        [Sequelize.Op.like]: "%" + search + "%",
-      },
-      genre: type,
-    },
-  });
-  res.json(data);
-});
-
-// implement search by genre
-app.get("/genre/:type", async (req, res) => {
+app.get("/search/genre/:type", async (req, res) => {
+  // const search = req.params.search;
   const type = req.params.type;
   const data = await book_table.findAll({
     where: {
       genre: {
         [Sequelize.Op.like]: "%" + type + "%",
-      }
+      },
+      
     },
   });
   res.json(data);
 });
+
+// implement search by partial keywords and search by author
+// auth
+app.get("/search/:search/:author", async (req, res) => {
+  const search = req.params.search;
+  const author = req.params.author;
+  const data = await book_table.findAll({
+    where: {
+      name: {
+        [Sequelize.Op.like]: "%" + search + "%",
+      },
+      author: author,
+    },
+  });
+  res.json(data);
+});
+
+// implement user signup
+app.post("/signup", async (req, res) => {
+  const name = req.body.name;
+  const email = req.body.email;
+  const password = req.body.password;
+
+  // check user already exists
+  const user = await user_table.findOne({
+    where: {
+      email: email,
+    },
+  });
+  if (user) {
+    res.send("user already exists");
+    res.status(401);
+    return;
+  }
+  const saveUser = user_table.build({
+    name: name,
+    email: email,
+    password: password,
+  });
+  try {
+    await saveUser.save();
+    res.send("user signed up");
+  }
+  catch (err) {
+    console.log(err);
+  }
+});
+
+
+
+
 
 
 
