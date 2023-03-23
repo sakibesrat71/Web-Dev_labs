@@ -110,6 +110,60 @@ app.delete("/:id", (req, res) => {
   res.redirect("/");
 });
 
+// app.get("/search/:search", async (req, res) => {
+//   const search = req.params.search;
+//   const data = await book_table.findAll({
+//     where: {
+//       name: search,
+//     },
+//   });
+//   res.json(data);
+// });
+
+// implement search by partial keywords
+app.get("/search/:search", async (req, res) => {
+  const search = req.params.search;
+  const data = await book_table.findAll({
+    where: {
+      name: {
+        [Sequelize.Op.like]: "%" + search + "%",
+      },
+    },
+  });
+  res.json(data);
+});
+
+// implement search by partial keywords and search by type
+app.get("/search/:search/:type", async (req, res) => {
+  const search = req.params.search;
+  const type = req.params.type;
+  const data = await book_table.findAll({
+    where: {
+      name: {
+        [Sequelize.Op.like]: "%" + search + "%",
+      },
+      genre: type,
+    },
+  });
+  res.json(data);
+});
+
+// implement search by genre
+app.get("/genre/:type", async (req, res) => {
+  const type = req.params.type;
+  const data = await book_table.findAll({
+    where: {
+      genre: {
+        [Sequelize.Op.like]: "%" + type + "%",
+      }
+    },
+  });
+  res.json(data);
+});
+
+
+
+
 app.listen(port, () => {
   console.log(`server starts at http://localhost:${port}`);
 });

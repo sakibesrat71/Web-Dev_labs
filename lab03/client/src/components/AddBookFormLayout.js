@@ -1,7 +1,8 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
-
+import SearchPage from "./SearchPage";
+import SearchBar from "./SearchBar";
 export default function AddBookFormLayout() {
   const [name, setName] = useState("");
   const [author, setAuthor] = useState("");
@@ -76,7 +77,12 @@ export default function AddBookFormLayout() {
 };
 
   return (
+    
     <div className="container" style={{ margin: "5%" }}>
+      <div style={{ position: 'absolute', top: 0, right: 0 }}>
+  <SearchPage />
+</div>
+
       <div class="row g-3">
         <form onSubmit={handleSubmit}>
           <div class="row mb-3">
