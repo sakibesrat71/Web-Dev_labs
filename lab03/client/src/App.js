@@ -16,6 +16,7 @@ function App() {
           <Route path="/updateBook/:id" element={<UpdateBookFormLayout />} />
           <Route path="/search" element={<SearchPage />} />
           <Route path="/signUp" element={<UserSignUpPage />} />
+          <Route path="/login" element={<UserLoginPage />} />
           </Routes>
     </Router>
   )

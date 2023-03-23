@@ -48,7 +48,7 @@ export default function UserLoginFormLayout() {
   const handleSubmit = (event) => {
     event.preventDefault();
     // perform form submission if inputs are valid
-    axios.post("http://localhost:5001/auth/login", {
+    axios.post("http://localhost:7000/login", {
       email: email,
       password: password,
     }).then((response) => {  

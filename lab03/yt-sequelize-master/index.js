@@ -195,7 +195,7 @@ app.post("/signup", async (req, res) => {
   });
   if (user) {
     res.send("user already exists");
-    res.status(401);
+    // res.status(401);
     return;
   }
   const saveUser = user_table.build({
@@ -210,6 +210,26 @@ app.post("/signup", async (req, res) => {
   catch (err) {
     console.log(err);
   }
+});
+
+// implement user login
+app.post("/login", async (req, res) => {
+  const email = req.body.email;
+  const password = req.body.password;
+
+  // check user already exists
+  const user = await user_table.findOne({
+    where: {
+      email: email,
+      password: password,
+    },
+  });
+  if (user) {
+    res.send("user logged in");
+    // res.status(401);
+    return;
+  }
+  res.send("user not found");
 });
 
 

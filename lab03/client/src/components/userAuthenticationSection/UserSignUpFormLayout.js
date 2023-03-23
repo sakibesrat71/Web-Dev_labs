@@ -63,12 +63,12 @@ export default function UserSignUpFormLayout() {
         password: password
       }).then((response) => {
         console.log(response);
-        if (response.status == 200 && response.data.message != "user already exists") {
+        if (response.status == 200 && response.data != "user already exists") {
 
           alert("Welcome to the citadal")
           navigate('/login')
         }
-        else if (response.status == 401 && response.data.message == "user already exists") {
+        else if (response.status == 200 && response.data == "user already exists") {
           alert("why are you trying to sign up again")
         }
       }).catch((error) => {
