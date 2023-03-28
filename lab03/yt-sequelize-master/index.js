@@ -4,128 +4,141 @@ const bodyParser = require("body-parser");
 const Sequelize = require("sequelize");
 const port = 7000;
 const cors = require("cors");
+const book_table = require("./model/book_table");
+const user_table = require("./model/user_table");
+
+// importing routes
+const bookRouter = require("./router/bookRouter");
    
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-const sequelize = new Sequelize("test", "root", "password", {
-  dialect: "mysql",
-  host: "localhost"
-});
+// using routes
+app.use("/book", bookRouter);
+
+// const sequelize = new Sequelize("test", "root", "password", {
+//   dialect: "mysql",
+//   host: "localhost"
+// });
+
+// exporting sequelize
+
 
 // creating book table
-const book_table = sequelize.define(
-  "book_table",
-  {
-    name: Sequelize.STRING,
-    author: Sequelize.TEXT,
-    genre: Sequelize.STRING,
-  },
-  { tableName: "book_table" }
-);
+// const book_table = sequelize.define(
+//   "book_table",
+//   {
+//     name: Sequelize.STRING,
+//     author: Sequelize.TEXT,
+//     genre: Sequelize.STRING,
+//   },
+//   { tableName: "book_table" }
+// );
 
-book_table.sync();
+// book_table.sync();
 
 // creating user table
-const user_table = sequelize.define(
-  "user_table",
-  {
-    name: Sequelize.STRING,
-    email: Sequelize.STRING,
-    password: Sequelize.STRING,
-  },
-  { tableName: "user_table" }
-);
+// const user_table = sequelize.define(
+//   "user_table",
+//   {
+//     name: Sequelize.STRING,
+//     email: Sequelize.STRING,
+//     password: Sequelize.STRING,
+//   },
+//   { tableName: "user_table" }
+// );
 
-user_table.sync();
+// user_table.sync();
 
-sequelize
-  .authenticate()
-  .then(() => {
-    console.log("connection made successfully");
-  })
-  .catch((err) => console.log(err, "this has a error"));
+// sequelize
+//   .authenticate()
+//   .then(() => {
+//     console.log("connection made successfully");
+//   })
+//   .catch((err) => console.log(err, "this has a error"));
+
+//   module.exports = sequelize;
 
   // post route for CREATING a book
-app.post("/", async (req, res) => {
-  const name = req.body.name;
-  const author = req.body.author;
-  const genre = req.body.genre;
-  const saveBlog = book_table.build({
-    name: name,
-    author: author,
-    genre: genre,
-  });
-  try {
-    await saveBlog.save();
-    res.send("data posted ");
-  }
-  catch (err) {
-    console.log(err);
-  }
-  // await saveBlog.save();
-  // res.send("data posted ");
-});
+// app.post("/", async (req, res) => {
+//   const name = req.body.name;
+//   const author = req.body.author;
+//   const genre = req.body.genre;
+//   const saveBlog = book_table.build({
+//     name: name,
+//     author: author,
+//     genre: genre,
+//   });
+//   try {
+//     await saveBlog.save();
+//     res.send("data posted ");
+//   }
+//   catch (err) {
+//     console.log(err);
+//   }
+//   // await saveBlog.save();
+//   // res.send("data posted ");
+// });
 
-// get route for GETTING all books
-app.get("/", async (req, res) => {
-  const alldata = await book_table.findAll();
-  res.json(alldata);
-});
+// // get route for GETTING all books
+// app.get("/", async (req, res) => {
+//   const alldata = await book_table.findAll();
+//   res.json(alldata);
+// });
 
-// getting a single book by id
-app.get("/:id", async (req, res) => {
-  const id = req.params.id;
-  const data = await book_table.findOne({
-    where: {
-      id: id,
-    },
-  });
-  res.json(data);
-});
+// // getting a single book by id
+// app.get("/:id", async (req, res) => {
+//   const id = req.params.id;
+//   const data = await book_table.findOne({
+//     where: {
+//       id: id,
+//     },
+//   });
+//   res.json(data);
+// });
 
-// getting books by pagination
-app.get("/page/:page", async (req, res) => {
-  const page = req.params.page; 
-  const limit = 2;
-  const offset = (page - 1) * limit;
-  const data = await book_table.findAll({
-    limit: limit,
-    offset: offset,
-  });
-  res.json(data);
-});
+// // getting books by pagination
+// app.get("/page/:page", async (req, res) => {
+//   const page = req.params.page; 
+//   const limit = 2;
+//   const offset = (page - 1) * limit;
+//   const data = await book_table.findAll({
+//     limit: limit,
+//     offset: offset,
+//   });
+//   res.json(data);
+// });
 
 
-// put route for UPDATING a book
-app.put("/:id", (req, res) => {
+// // put route for UPDATING a book
+// app.put("/:id", (req, res) => {
   
-  book_table.update(
-    {
-      name: req.body.name,
-      author: req.body.author,
-      genre: req.body.genre,
-    },
-    {
-      where: {
-        id: req.params.id,
-      },
-    }
-  );
-  res.send("data updated");
-});
+//   book_table.update(
+//     {
+//       name: req.body.name,
+//       author: req.body.author,
+//       genre: req.body.genre,
+//     },
+//     {
+//       where: {
+//         id: req.params.id,
+//       },
+//     }
+//   );
+//   res.send("data updated");
+// });
 
-// delete route for DELETING a book
-app.delete("/:id", (req, res) => {
-  book_table.destroy({
-    where: {
-      id: req.params.id,
-      // name: req.params.name,
-    },
-  });
-  res.redirect("/");
-});
+// // delete route for DELETING a book
+// app.delete("/:id", (req, res) => {
+//   book_table.destroy({
+//     where: {
+//       id: req.params.id,
+//       // name: req.params.name,
+//     },
+//   });
+//   res.redirect("/");
+// });
 
 // app.get("/search/:search", async (req, res) => {
 //   const search = req.params.search;

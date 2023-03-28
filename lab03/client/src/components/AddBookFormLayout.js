@@ -15,7 +15,7 @@ export default function AddBookFormLayout() {
 
   const addBook = () => {
     axios
-      .post("http://localhost:7000", {
+      .post("http://localhost:7000/book", {
         name: name,
         author: author,
         genre: genre,

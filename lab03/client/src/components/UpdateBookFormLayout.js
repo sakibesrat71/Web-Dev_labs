@@ -14,7 +14,7 @@ export default function UpdateBookFormLayout() {
   let params = useParams()
   useEffect(() => {
     console.log(params)
-    axios.get(`http://localhost:7000/${params.id}`).then((response) => {
+    axios.get(`http://localhost:7000/book/${params.id}`).then((response) => {
       setName(response.data.name);
       setAuthor(response.data.author);
       setGenre(response.data.genre);
@@ -26,7 +26,7 @@ export default function UpdateBookFormLayout() {
     
     console.log(params)
     axios
-      .put(`http://localhost:7000/${params.id}`, {
+      .put(`http://localhost:7000/book/${params.id}`, {
         name: name,
         author: author,
         genre: genre,

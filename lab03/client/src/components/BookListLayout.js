@@ -12,9 +12,10 @@ export default function BookListLayout() {
   const [booksPerPage, setBooksPerPage] = useState(10);
   const [bookList, setBookList] = useState([]);
   
+  
   // const { page } = useParams();
   useEffect(() => {
-    axios.get(`http://localhost:7000/page/${currentPage}`).then((response) => {
+    axios.get(`http://localhost:7000/book/page/${currentPage}`).then((response) => {
       setBookList(response.data);
       
     });
@@ -46,7 +47,7 @@ export default function BookListLayout() {
 
   const deleteBook = (id) => {
     axios
-      .delete(`http://localhost:7000/${id}`)
+      .delete(`http://localhost:7000/book/${id}`)
       .then((response) => {
         // update the bookList state after deleting the book
         setBookList(bookList.filter((book) => book.id !== id));
@@ -88,7 +89,7 @@ export default function BookListLayout() {
                     class="btn btn-success"
                     onClick={() => {
                       console.log("clicked");
-                      window.location.href = `updateBook/${book.id}`;
+                      window.location.href = `/updateBook/${book.id}`;
                     }}
                   >
                     Update
