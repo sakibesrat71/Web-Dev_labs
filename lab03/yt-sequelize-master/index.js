@@ -9,6 +9,7 @@ const user_table = require("./model/user_table");
 
 // importing routes
 const bookRouter = require("./router/bookRouter");
+const authRouter = require("./router/auth");
    
 app.use(cors());
 app.use(bodyParser.json());
@@ -16,6 +17,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // using routes
 app.use("/book", bookRouter);
+app.use("/auth", authRouter);
 
 // const sequelize = new Sequelize("test", "root", "password", {
 //   dialect: "mysql",
