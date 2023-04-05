@@ -35,7 +35,7 @@ routers.post("/", async (req, res) => {
   // getting a single book by id
 routers.get("/:id", async (req, res) => {
     const id = req.params.id;
-    const data = await book_table.findOne({
+    const data = await book_table.findOne({ 
       where: {
         id: id,
       },
@@ -60,13 +60,13 @@ routers.put("/:id", (req, res) => {
   
     book_table.update(
       {
-        name: req.body.name,
+        name: req.body.name, 
         author: req.body.author,
         genre: req.body.genre,
       },
       {
         where: {
-          id: req.params.id,
+          id: req.params.id,  
         },
       }
     );

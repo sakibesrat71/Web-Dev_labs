@@ -2,22 +2,27 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const Sequelize = require("sequelize");
-const port = 7000;
+const port = 5001;
 const cors = require("cors");
 const book_table = require("./model/book_table");
 const user_table = require("./model/user_table");
+require('dotenv').config();
+ 
 
 // importing routes
 const bookRouter = require("./router/bookRouter");
 const authRouter = require("./router/auth");
+const borrowRouter = require("./router/borrowRouter");
    
 app.use(cors());
+app.use(bodyParser.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // using routes
 app.use("/book", bookRouter);
 app.use("/auth", authRouter);
+app.use("/borrow", borrowRouter);
 
 // const sequelize = new Sequelize("test", "root", "password", {
 //   dialect: "mysql",
@@ -197,55 +202,55 @@ app.get("/search/:search/:author", async (req, res) => {
 });
 
 // implement user signup
-app.post("/signup", async (req, res) => {
-  const name = req.body.name;
-  const email = req.body.email;
-  const password = req.body.password;
+// app.post("/signup", async (req, res) => {
+//   const name = req.body.name;
+//   const email = req.body.email;
+//   const password = req.body.password;
 
-  // check user already exists
-  const user = await user_table.findOne({
-    where: {
-      email: email,
-    },
-  });
-  if (user) {
-    res.send("user already exists");
-    // res.status(401);
-    return;
-  }
-  const saveUser = user_table.build({
-    name: name,
-    email: email,
-    password: password,
-  });
-  try {
-    await saveUser.save();
-    res.send("user signed up");
-  }
-  catch (err) {
-    console.log(err);
-  }
-});
+//   // check user already exists
+//   const user = await user_table.findOne({
+//     where: {
+//       email: email,
+//     },
+//   });
+//   if (user) {
+//     res.send("user already exists");
+//     // res.status(401);
+//     return;
+//   }
+//   const saveUser = user_table.build({
+//     name: name,
+//     email: email,
+//     password: password,
+//   });
+//   try {
+//     await saveUser.save();
+//     res.send("user signed up");
+//   }
+//   catch (err) {
+//     console.log(err);
+//   }
+// });
 
-// implement user login
-app.post("/login", async (req, res) => {
-  const email = req.body.email;
-  const password = req.body.password;
+// // implement user login
+// app.post("/login", async (req, res) => {
+//   const email = req.body.email;
+//   const password = req.body.password;
 
-  // check user already exists
-  const user = await user_table.findOne({
-    where: {
-      email: email,
-      password: password,
-    },
-  });
-  if (user) {
-    res.send("user logged in");
-    // res.status(401);
-    return;
-  }
-  res.send("user not found");
-});
+//   // check user already exists
+//   const user = await user_table.findOne({
+//     where: {
+//       email: email,
+//       password: password,
+//     },
+//   });
+//   if (user) {
+//     res.send("user logged in");
+//     // res.status(401);
+//     return;
+//   }
+//   res.send("user not found");
+// });
 
 
 

@@ -9,6 +9,7 @@ const user_table = sequelize.define(
       name: Sequelize.STRING,
       email: Sequelize.STRING,
       password: Sequelize.STRING,
+      isVerified: Sequelize.BOOLEAN,
     },
     { tableName: "user_table" }
   );
