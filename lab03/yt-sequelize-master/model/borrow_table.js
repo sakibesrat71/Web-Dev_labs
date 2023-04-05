@@ -8,6 +8,7 @@ const borrow_table = sequelize.define(
     {
         user_id: Sequelize.INTEGER,
         book_id: Sequelize.INTEGER,
+        book_name: Sequelize.STRING,
         borrow_date: Sequelize.DATE,
         return_date: Sequelize.DATE,
         userEmail: Sequelize.STRING,

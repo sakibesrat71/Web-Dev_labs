@@ -175,7 +175,7 @@ routers.post("/signup", async (req, res) => {
         const user = await user_table.findOne({
           where: {
             id: user_id,
-          },  
+          },    
         });
         if (!user) {
           res.status(203).send("user not found");
