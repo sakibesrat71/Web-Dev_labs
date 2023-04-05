@@ -13,6 +13,7 @@ require('dotenv').config();
 const bookRouter = require("./router/bookRouter");
 const authRouter = require("./router/auth");
 const borrowRouter = require("./router/borrowRouter");
+const moderatorRouter = require("./router/moderatorRouter");
    
 app.use(cors());
 app.use(bodyParser.json());
@@ -23,6 +24,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use("/book", bookRouter);
 app.use("/auth", authRouter);
 app.use("/borrow", borrowRouter);
+app.use("/moderator", moderatorRouter);
 
 // const sequelize = new Sequelize("test", "root", "password", {
 //   dialect: "mysql",
