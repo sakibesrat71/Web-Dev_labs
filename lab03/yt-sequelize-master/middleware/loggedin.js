@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 
 module.exports = function loggedin(req, res, next) {
   // Get auth header value
+  console.log("loggedin edhukse");
   const token = req.header('auth-token');
     // Check if not token
     if (!token) {

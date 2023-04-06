@@ -1,6 +1,10 @@
 const express = require('express');
 const routers=express.Router();
 const book_table=require('../model/book_table');
+const borrow_table=require('../model/borrow_table');
+const borrow_history=require('../model/borrow_history');
+const loggedin=require('../middleware/loggedin');
+const jwt=require('jsonwebtoken');
 
 routers.get('/status',(req,res)=>{
     res.send('hello');
@@ -55,6 +59,106 @@ routers.get("/page/:page", async (req, res) => {
     res.json(data);
   });
 
+  routers.get("/recoend/jj/",loggedin, async (req, res) => {
+    
+    console.log("recom e dhukse");
+    // get user id from header
+    const token = req.header("auth-token");
+    const decoded = jwt.verify(token, process.env.TOKEN);
+    const userId = decoded._id;
+    // console.log(userId);
+    const borrowedBooks = await borrow_history.findAll({
+      where: {
+        user_id: userId,
+      },
+    })
+    const books = [];
+    borrowedBooks.forEach(async element => {
+      const book= await book_table.findOne({
+        where: {
+          id: element.book_id,
+        },
+        
+    });
+    // console.log("boi print hoy");
+    // console.log(book);
+    books.push(book);
+    console.log(books)
+    const books1 = books.filter(book=>book.genre=="fiction");
+  const books2 = books.filter(book=>book.genre=="non-fiction");
+  const books3 = books.filter(book=>book.genre=="novel");
+
+  // get the most frequent genre
+  const genre1 = books1.length;
+  const genre2 = books2.length;
+  const genre3 = books3.length;
+
+  // console.log(genre1, genre2, genre3);
+  const max = Math.max(genre1, genre2, genre3);
+  let recommendedGenre;
+  if (max == genre1) {
+    recommendedGenre = "fiction";
+  }
+  else if (max == genre2) {
+    recommendedGenre = "Non-fiction";
+  }
+  else {
+    recommendedGenre = "novel";
+  }
+
+  // console.log(recommendedGenre);
+  // get the latest 3 books of the most frequent genre
+  const recommendedBooks = await book_table.findAll({
+    where: {
+      genre: recommendedGenre,
+    },
+    limit: 3,
+    order: [
+      ['createdAt', 'DESC'],
+    ],
+  });
+  
+
+  })
+  res.json(recommendedBooks);
+  console.log("full print hoy");
+  // console.log(books);
+  // filter books array by genre
+  // const books1 = books.filter(book=>book.genre=="fiction");
+  // const books2 = books.filter(book=>book.genre=="non-fiction");
+  // const books3 = books.filter(book=>book.genre=="novel");
+
+  // // get the most frequent genre
+  // const genre1 = books1.length;
+  // const genre2 = books2.length;
+  // const genre3 = books3.length;
+
+  // // console.log(genre1, genre2, genre3);
+  // const max = Math.max(genre1, genre2, genre3);
+  // let recommendedGenre;
+  // if (max == genre1) {
+  //   recommendedGenre = "fiction";
+  // }
+  // else if (max == genre2) {
+  //   recommendedGenre = "Non-fiction";
+  // }
+  // else {
+  //   recommendedGenre = "novel";
+  // }
+
+  // // console.log(recommendedGenre);
+  // // get the latest 3 books of the most frequent genre
+  // const recommendedBooks = await book_table.findAll({
+  //   where: {
+  //     genre: recommendedGenre,
+  //   },
+  //   limit: 3,
+  //   order: [
+  //     ['createdAt', 'DESC'],
+  //   ],
+  // });
+  // res.json(recommendedBooks);
+});
 // put route for UPDATING a book
 routers.put("/:id", (req, res) => {
   
@@ -83,6 +187,8 @@ routers.delete("/:id", (req, res) => {
     });
     res.redirect("/");
   });
+
+  // recommended books
 
 
 module.exports=routers;

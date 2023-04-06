@@ -17,9 +17,12 @@ routers.post('/borrow', loggedin, async (req, res) => {
     const userEmail = decoded.email;
 
     const book_id = req.body.book_id;
-
+    // CHANGE THIS TO ORIGINAL
     const borrow_date = req.body.borrow_date;
+    // const borrow_date = Date.parse(new Date()) - (1000 * 60 * 60 * 24 * 11);
+    // CHANGE THIS TO ORIGINAL
     const return_date = req.body.return_date;
+    // const return_date = Date.parse(new Date());
     const book_name = req.body.book_name;
 
     // check if book is already borrowed
@@ -38,7 +41,7 @@ routers.post('/borrow', loggedin, async (req, res) => {
             book_id,
             book_name,
             user_id,
-            borrow_date,
+            borrow_date: borrow_date,
             return_date,
             userEmail,
         });
@@ -70,6 +73,7 @@ routers.get('/borrowedBooks', loggedin, async (req, res) => {
 
 // fine users if book is not returned on time
 routers.get('/fine', loggedin, async (req, res) => {
+    console.log("fine edhukse");
     // get user id from token
     const token = req.header('auth-token');
     const decoded = jwt.verify(token, process.env.TOKEN);
@@ -86,7 +90,9 @@ routers.get('/fine', loggedin, async (req, res) => {
         const today = new Date();
         if (today > return_date) {
             // fine user 20 rupees per day
-            const finedMoney = (today - return_date) / (1000 * 60 * 60 * 24) * 20;
+            const finedMoney = (today - return_date) * 0.000115741;
+
+            console.log(finedMoney);
 
             // check if user is already fined
             const fined = await fine_table.findOne({
@@ -115,6 +121,7 @@ routers.get('/fine', loggedin, async (req, res) => {
                     borrow_date: borrowedBook.borrow_date,
                     return_date: borrowedBook.return_date,
                     fine: finedMoney,
+                    finePaid: "NO",
                 });
                 try {
                     const savedFine = await fine.save();
@@ -177,6 +184,59 @@ routers.post('/return', async (req, res) => {
         res.send("book not borrowed");
     }
 });
+
+// fine payed route
+routers.put('/finePayed', async (req, res) => {
+    const user_id = req.body.user_id;
+    const book_id = req.body.book_id;
+    const fine = await fine_table.findOne({
+        where: {
+            user_id: user_id,
+            book_id: book_id,
+        },
+    });
+    const borrow = await borrow_table.findOne({
+        where: {
+            user_id: user_id,
+            book_id: book_id,
+        },
+    });
+    if (fine) {
+        await fine.destroy();
+        if (borrow) {
+            await borrow.destroy();
+        }
+        
+    }
+    
+
+    else {
+        res.send("fine not found");
+    }
+})
+
+// delete fine route
+routers.delete('/deleteFine', async (req, res) => {
+    console.log(req.body);
+    const fine = await fine_table.findOne({
+        where: {
+            user_id: req.body.user_id,
+            book_id: req.body.book_id,
+        },
+    });
+    if (fine) { 
+        try {
+            const deletedFine = await fine.destroy();
+            res.json(deletedFine);
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
+    else {
+        res.send("fine not found");
+    }
+})
 
 
 

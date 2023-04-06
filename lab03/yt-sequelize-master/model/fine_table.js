@@ -13,7 +13,7 @@ const fine_table = sequelize.define(
         return_date: Sequelize.DATE,
         userEmail: Sequelize.STRING,
         fine: Sequelize.INTEGER,
-        finePayed: Sequelize.BOOLEAN,
+        finePayed: Sequelize.STRING,
         finePayingDate: Sequelize.DATE,
     },  
     { tableName: "fine_table" }
