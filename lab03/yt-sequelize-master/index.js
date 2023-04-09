@@ -14,7 +14,8 @@ const bookRouter = require("./router/bookRouter");
 const authRouter = require("./router/auth");
 const borrowRouter = require("./router/borrowRouter");
 const moderatorRouter = require("./router/moderatorRouter");
-   
+const notificationRouter = require("./router/notificationRouter");
+
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.json());
@@ -25,6 +26,8 @@ app.use("/book", bookRouter);
 app.use("/auth", authRouter);
 app.use("/borrow", borrowRouter);
 app.use("/moderator", moderatorRouter);
+app.use("/notification", notificationRouter);
+
 
 // const sequelize = new Sequelize("test", "root", "password", {
 //   dialect: "mysql",
