@@ -7,6 +7,8 @@ const book_table = require('../model/book_table');
 
 module.exports = async function fineNotification(req, res, next) {
 
+    // console.log("fineNotification middleware called");
+
     // get the user id from the token
     const token = req.header('auth-token');
     const decoded = jwt.verify(token, process.env.TOKEN);
@@ -34,11 +36,14 @@ module.exports = async function fineNotification(req, res, next) {
         });
         try {
             const savedNotification = await newNotification.save();
+            console.log("FINE notification saved");
         }
         catch (err) {
             console.log(err);
         }
 
     });
+
+    next();
 
 }

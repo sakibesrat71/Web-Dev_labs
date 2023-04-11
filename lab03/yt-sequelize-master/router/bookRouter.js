@@ -59,6 +59,25 @@ routers.get("/page/:page", async (req, res) => {
   res.json(data);
 });
 
+// getting the number of pages
+routers.get("/paging/total2", async (req, res) => {
+  const page = await book_table.findAll().then((data) => {
+    return data.length;
+
+  }).catch((err) => {
+    console.log(err);
+  });
+
+  const limit = 2;
+  const pages = Math.ceil(page / limit);
+  res.json(pages);
+
+  // const total = data.length;
+  // const limit = 2;
+  // const pages = Math.ceil(total / limit);
+  // res.json(pages);
+});
+
 routers.get("/recoend/jj/", loggedin, async (req, res) => {
 
   console.log("recom e dhukse");

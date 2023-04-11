@@ -7,10 +7,10 @@ const borrow_table = require('../model/borrow_table');
 
 module.exports = async function dateRemainingNotification(req, res, next) {
 
-    console.log("dateRemainingNotification middleware called");
+    // console.log("dateRemainingNotification middleware called");
     const token = req.header('auth-token');
     if (!token) {
-        console.log("nai token");
+        // console.log("nai token");
         return res.status(407).json({ msg: 'No token, authorization denied' });
     }
     // Verify token
@@ -27,17 +27,21 @@ module.exports = async function dateRemainingNotification(req, res, next) {
         });
         borrowHistory.forEach(async (borrowedBook) => {
             const dayRemaining = (borrowedBook.return_date - new Date()) / 86400000;
-            if (true) {
+            // convert milliseconds to days
+            console.log(dayRemaining);
+            const days = Math.floor(dayRemaining / (1000 * 60 * 60 * 24));
 
+            if (true) {
+                console.log(dayRemaining);
                 const notification = await notifications.build({
-                    user_id: decoded.id,
+                    user_id: decoded._id,
                     notificationType: "borrow",
-                    notificationMessage: "You have " + dayRemaining + " days remaining to return " + borrowedBook.book_name,
+                    notificationMessage: "You have " + Math.floor(dayRemaining) + " days remaining to return " + borrowedBook.book_name,
                     notificationDate: new Date(),
                 });
                 try {
                     const savedNotification = await notification.save();
-                    console.log("notification saved");
+                    // console.log("notification saved");
                 }
                 catch (err) {
                     console.log(err);

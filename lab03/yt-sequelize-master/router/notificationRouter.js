@@ -12,7 +12,11 @@ const fineNotification = require('../middleware/fineNotification');
 // GET /notification
 
 routers.get('/hh', loggedin,dateRemainingNotification,fineNotification, async (req, res) => {
-    const user_id = req.borrower_id;
+    // get the user id from the token
+    const token = req.header('auth-token');
+    const decoded = jwt.verify(token, process.env.TOKEN);
+    const user_id = decoded._id;
+
     console.log(user_id);
     // get the latest 4 notifications
     const notification = await notifications.findAll({
@@ -20,8 +24,10 @@ routers.get('/hh', loggedin,dateRemainingNotification,fineNotification, async (r
             user_id: user_id,
         },
         limit: 4,
-        order: [['createdAt', 'DESC']],
+        order: [['createdAt', 'DESC']],  
     });
+
+   // console.log(notification);
   
     // get the oldest 3 notifications
     const notification2 = await notifications.findAll({
